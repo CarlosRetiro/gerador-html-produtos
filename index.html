@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Gerador de HTML de Produtos</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: #f3f4f6;
+      padding: 40px;
+      margin: 0;
+      display: flex;
+      justify-content: center;
+    }
+
+    .container {
+      background: #fff;
+      padding: 30px;
+      border-radius: 16px;
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+      max-width: 900px;
+      width: 100%;
+    }
+
+    h1 {
+      text-align: center;
+      margin-bottom: 20px;
+      color: #fd541d;
+    }
+
+    .campo {
+      margin-bottom: 15px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 6px;
+      font-weight: 600;
+      color: #18aa2c;
+    }
+
+    input,
+    textarea,
+    select,
+    button {
+      width: 100%;
+      padding: 10px;
+      border-radius: 8px;
+      border: 1px solid #d1d5db;
+      font-size: 15px;
+    }
+
+    textarea {
+      resize: vertical;
+    }
+
+    button {
+      background: #fd541d;
+      color: white;
+      border: none;
+      cursor: pointer;
+      transition: 0.3s;
+      margin-top: 10px;
+    }
+
+    button:hover {
+      background: #1d4ed8;
+    }
+
+    #htmlGeradoContainer {
+      display: none;
+      margin-top: 20px;
+    }
+
+    #htmlGerado {
+      font-family: monospace;
+      height: 200px;
+      margin-top: 10px;
+    }
+
+    .linha {
+      border-top: 1px solid #e5e7eb;
+      margin: 25px 0;
+     
+    }
+
+    .hidden {
+      display: none;
+    }
+     .logo {
+      display: block;
+      margin: 0 auto 10px;
+      max-width: 200px;
+      }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <img src="digital roxo.png" alt="Logo Panorama Digital" class="logo" />
+    <h1>Enriquecimento de Produtos</h1>
+
+    <div class="campo">
+      <label for="categoria">Selecione a Categoria:</label>
+      <select id="categoria" onchange="mostrarCamposGerais(); gerarCampos()">
+        <option value="">-- Escolha uma Categoria --</option>
+        <option value="ferramentas">Ferramentas Elétricas</option>
+        <option value="pisos">Porcelanatos / Pisos</option>
+        <option value="cubas">Cubas</option>
+        <option value="tintas">Tintas</option>
+        <option value="loucas">Louças Sanitárias</option>
+        <option value="mono">Misturadores e Monocomandos</option>
+        <option value="balcao">Armários e Balcões</option>
+        <option value="lampada">Lâmpadas e Arandelas</option>
+        <option value="painel">Painel de Led e Spot</option>
+        <option value="fita">Fita de Led</option>
+        <option value="variado">Variados</option>
+        <option value="chuveiro">Chuveiro Elétrico</option>
+        <option value="torneira">Torneiras</option>
+        <option value="ventilador">Ventiladores, Climatizadores e Aquecedores</option>
+        <option value="pia">Pias e Tanques</option>
+        <option value="torEletrica">Torneira Elétrica</option>
+      </select>
+    </div>
+
+    <div id="camposGerais" class="hidden">
+      <div class="campo">
+        <label for="titulo">Título do Produto:</label>
+        <input type="text" id="titulo" placeholder="Ex: Digite um Título para o Produto">
+      </div>
+
+      <div class="campo">
+        <label for="introducao">Introdução / Descrição:</label>
+        <textarea id="introducao" placeholder="Digite uma introdução ou descrição do produto..."></textarea>
+      </div>
+
+      <div class="linha"></div>
+
+      <div id="camposContainer"></div>
+
+      <button onclick="gerarHTML()">Gerar HTML</button>
+    </div>
+
+    <div id="htmlGeradoContainer">
+      <textarea id="htmlGerado" readonly></textarea>
+      <button onclick="copiarHTML()">Copiar HTML</button>
+    </div>
+  </div>
+
+  <script>
+    const categorias = {
+      ferramentas: [
+        "Produto", "Marca", "Referência", "Cor", "Modelo", "Voltagem", "Potência", "Tensão",
+        "Velocidade de Rotação", "Tipo de Mandril", "Tipo de Motor", "Tipo de Movimento",
+        "Capacidade de Perfuração/Corte", "Dimensões (cm)", "Peso", "Nível de Ruído", "Acessórios Inclusos"
+      ],
+      pisos: [
+        "Produto", "Marca", "Referência", "Cor", "Formato", "Tipo", "Acabamento Superfície", "Borda",
+        "Dimensões (cm)", "Espessura", "Unidade de Venda", "Metragem por Caixa", "Junta Mínima",
+        "Variação", "Tráfego de Pessoas (Locais de Uso)", "Aplicação"
+      ],
+      cubas: [
+        "Produto", "Marca", "Referência", "Modelo", "Tipo de Cuba", "Material", "Cor", "Acabamento",
+        "Dimensões(cm)", "Peso (kg)", "Formato/Design", "Furo da Torneira", "Com Mesa", "Acompanha Válvula", "Tipo de Instalação"
+      ],
+      tintas: [
+        "Produto", "Marca", "Referência", "Tipo de Tinta", "Composição", "Cor", "Acabamento",
+        "Aplicação", "Tempo de Secagem/Cura", "Rendimento", "Material para Aplicação", "Diluição", "Facilidade de Limpeza"
+      ],
+      loucas: [
+        "Produto", "Marca", "Referência", "Modelo", "Tipo de Louça", "Cor", "Acabamento",
+        "Dimensões(cm)", "Peso(kg)", "Formato/Design", "Sistema de Descarga", "Tipo de Instalação"
+      ],  
+      mono: [
+        "Produto", "Marca", "Referência", "Modelo", "Tipo de Misturador/Monocomando", "Cor", "Acabamento",
+        "Dimensões(cm)", "Peso(kg)", "Tipo de Acionamento", "Tipo de Bica", "Pressão da Água", "Tipo de instalação"
+      ],  
+      balcao: [
+        "Produto", "Marca", "Referência", "Modelo", "Material", "Cor", "Acabamento",
+        "Dimensões(cm)", "Peso(kg)", "Tipo de Montagem", "Número de Prateleiras e Gavetas", "Cuba integrada (Sim/Não)", "Espelho Integrado (Sim/Não)"
+      ],  
+     lampada: [
+        "Produto", "Marca", "Referência", "Modelo", "Tipo", "Brilho", "Fonte de Iluminação",
+        "Dimensões(cm)", "Potência", "Temperatura da Cor", "Material", "Tipo de Instalação", "Grau de Proteção"
+      ],
+     painel: [
+        "Produto", "Marca", "Referência", "Modelo", "Tipo", "Base", "Fonte de Iluminação", "Formato", 
+        "Dimensões(cm)", "Potência", "Temperatura da Cor", "Material", "Tipo de Instalação", "Grau de Proteção" 
+      ],
+     fita: [
+        "Produto", "Marca", "Referência", "Tipo de Fita de Led", "Voltagem de Operação", "Lúmens por Metro", "Grau de Proteção", "Temperatura da Cor", 
+        "Tipo de Controle", "Cor da Luz", "Comprimento", "Material", "Tipo de Instalação"
+      ],
+      variado: [
+        "Produto", "Marca", "Referência", "Tipo", "Voltagem", "Cor", "Dimensões (cm)", "Aplicação", 
+        "Material", "Compatibilidade", "Bitola", "Material", "Peso", "Capacidade", "Conteúdo da Embalagem"
+      ],
+     chuveiro: [
+        "Produto", "Marca", "Referência", "Potência", "Voltagem", "Cor", "Dimensões (cm)", "Aplicação", 
+        "Ajuste de Temperatura", "Tipo de Jato", "Bitola", "Material", "Peso"
+      ],
+     torneira: [
+        "Produto", "Marca", "Referência", "Tipo de Torneira", "Material", "Cor", "Dimensões (cm)", "Aplicação", 
+        "Acabamento", "Tipo de Acionamento", "Tipo de Bica", "Pressão da Água"
+      ], 
+     ventilador: [
+        "Produto", "Marca", "Referência", "Tipo", "Potência", "Cor", "Dimensões (cm)", "Voltagem", 
+        "Número de Pás", "Velocidades", "Controle (Sim/Não)", "Peso", "Área de Cobertura"
+      ],   
+     pia: [
+        "Produto", "Marca", "Referência", "Cor", "Acabamento", "Dimensões (cm)", "Peso", 
+        "Tipo", "Material", "Formato", "Furo para Torneira (Sim/Não)", "Capacidade", "Número de Cubas"
+      ],  
+     torEletrica: [
+        "Produto", "Marca", "Referência", "Cor", "Potência", "Dimensões (cm)", "Voltagem", 
+        "Material", "Acabamento", "Bica Móvel (Sim/Não)", "Tipo de Instalação", "Indicados de Temperatura (Sim/Não)"
+      ], 
+    };
+
+    function mostrarCamposGerais() {
+      const categoria = document.getElementById('categoria').value;
+      const container = document.getElementById('camposGerais');
+      container.classList.toggle('hidden', !categoria);
+    }
+
+    function gerarCampos() {
+      const container = document.getElementById('camposContainer');
+      const categoria = document.getElementById('categoria').value;
+      container.innerHTML = '';
+
+      if (!categoria || !categorias[categoria]) return;
+
+      categorias[categoria].forEach(topico => {
+        const campo = document.createElement('div');
+        campo.className = 'campo';
+        campo.innerHTML = `
+          <label>${topico}:</label>
+          <input type="text" data-label="${topico}">
+        `;
+        container.appendChild(campo);
+      });
+    }
+
+    function gerarHTML() {
+      const titulo = document.getElementById('titulo').value.trim();
+      const intro = document.getElementById('introducao').value.trim();
+      const campos = document.querySelectorAll('#camposContainer input');
+
+      if (!titulo) {
+        alert("Por favor, insira o título do produto.");
+        return;
+      }
+
+      let html = `
+        <style>
+          body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            line-height: 1.6;
+          }
+          h1 { color: #333; font-size: 24px; }
+          h3 { color: #444; font-size: 18px; margin-top: 20px; }
+          p { margin: 5px 0; color: #555; }
+          strong { font-weight: bold; }
+        </style>
+        <body>
+          <h1>${titulo}</h1>
+      `;
+
+      if (intro) {
+        html += `<p>${intro}</p>`;
+      }
+
+      html += `<h3><strong>Especificações Técnicas:</strong></h3>`;
+
+      campos.forEach(input => {
+        const label = input.getAttribute('data-label');
+        const valor = input.value.trim();
+        if (valor !== '') {
+          html += `<p><strong>${label}:</strong> ${valor}</p>`;
+        }
+      });
+
+      html += `</body>`;
+
+      document.getElementById('htmlGerado').value = html;
+      document.getElementById('htmlGeradoContainer').style.display = 'block';
+    }
+
+    function copiarHTML() {
+      const campoHTML = document.getElementById('htmlGerado');
+      campoHTML.select();
+      document.execCommand('copy');
+      alert('HTML copiado para a área de transferência!');
+    }
+  </script>
+</body>
+</html>
